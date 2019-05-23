@@ -207,4 +207,23 @@ jucer_export_target_configuration(
 )
 
 
+jucer_export_target(
+  "Visual Studio 2015"
+  EXTRA_COMPILER_FLAGS
+    "/bigobj"
+)
+
+jucer_export_target_configuration(
+  "Visual Studio 2015"
+  NAME "Debug"
+  DEBUG_MODE ON
+)
+
+jucer_export_target_configuration(
+  "Visual Studio 2015"
+  NAME "Release"
+  DEBUG_MODE OFF
+)
+
+
 jucer_project_end()
