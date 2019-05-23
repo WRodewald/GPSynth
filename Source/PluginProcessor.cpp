@@ -11,6 +11,8 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
+#include "GPModel.h"
+
 //==============================================================================
 GpsynthAudioProcessor::GpsynthAudioProcessor()
 #ifndef JucePlugin_PreferredChannelConfigurations
@@ -24,6 +26,10 @@ GpsynthAudioProcessor::GpsynthAudioProcessor()
                        )
 #endif
 {
+
+
+	GP::VarianceKernel kernel(0.4);
+	std::cout << kernel.valueAt(0, 0);
 }
 
 GpsynthAudioProcessor::~GpsynthAudioProcessor()

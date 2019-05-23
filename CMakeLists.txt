@@ -14,6 +14,10 @@ set(GPSynth_jucer_FILE
 )
 
 
+# 3rd party
+add_subdirectory(libs/GPOsc)
+
+
 jucer_project_begin(
   JUCER_VERSION "5.3.2"
   PROJECT_FILE "${GPSynth_jucer_FILE}"
@@ -211,19 +215,26 @@ jucer_export_target(
   "Visual Studio 2015"
   EXTRA_COMPILER_FLAGS
     "/bigobj"
+  EXTERNAL_LIBRARIES_TO_LINK
+  GPOsc_Lib
 )
 
 jucer_export_target_configuration(
   "Visual Studio 2015"
   NAME "Debug"
   DEBUG_MODE ON
+  HEADER_SEARCH_PATHS
+	"libs/GPOsc/include"
 )
 
 jucer_export_target_configuration(
   "Visual Studio 2015"
   NAME "Release"
   DEBUG_MODE OFF
+  HEADER_SEARCH_PATHS
+	"libs/GPOsc/include"
 )
 
-
 jucer_project_end()
+
+
