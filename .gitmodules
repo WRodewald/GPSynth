@@ -4,3 +4,6 @@
 [submodule "libs/FRUT"]
 	path = libs/FRUT
 	url = https://github.com/McMartin/FRUT.git
+[submodule "libs/GPOsc"]
+	path = libs/GPOsc
+	url = https://github.com/WRodewald/GPOsc.git
