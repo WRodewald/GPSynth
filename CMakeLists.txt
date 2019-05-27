@@ -4,6 +4,13 @@ cmake_minimum_required(VERSION 3.4)
 
 project("GPSynth")
 
+# variables
+set(VST_BINARY_LOCATION "" CACHE PATH "Location for VST deployment")
+
+if (VST_BINARY_LOCATION)
+	set(EXPORTER_CONFIG_STRING_VST_DEPLOY VST_BINARY_LOCATION ${VST_BINARY_LOCATION})
+	message(${EXPORTER_CONFIG_STRING_VST_DEPLOY})
+endif()
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/libs/FRUT/cmake")
 include(Reprojucer)
@@ -26,7 +33,7 @@ jucer_project_begin(
 
 jucer_project_settings(
   PROJECT_NAME "GPSynth"
-  PROJECT_VERSION "1.0.0"
+  PROJECT_VERSION "0.1.0"
   REPORT_JUCE_APP_USAGE ON # Required for closed source applications without an Indie or Pro JUCE license
   DISPLAY_THE_JUCE_SPLASH_SCREEN ON # Required for closed source applications without an Indie or Pro JUCE license
   PROJECT_TYPE "Audio Plug-in"
@@ -45,6 +52,8 @@ jucer_audio_plugin_settings(
   PLUGIN_MANUFACTURER "yourcompany"
   PLUGIN_MANUFACTURER_CODE "Manu"
   PLUGIN_CODE "Gsvx"
+  PLUGIN_IS_A_SYNTH ON
+  PLUGIN_MIDI_INPUT ON
   # PLUGIN_CHANNEL_CONFIGURATIONS
   PLUGIN_AAX_IDENTIFIER "com.yourcompany.GPSynth"
   PLUGIN_AU_EXPORT_PREFIX "GPSynthAU"
@@ -65,6 +74,8 @@ jucer_project_files("GPSynth/Source"
   .         .         .         "Source/PluginProcessor.h"
   x         .         .         "Source/PluginEditor.cpp"
   .         .         .         "Source/PluginEditor.h"
+  x         .         .         "Source/GPSynthVoice.cpp"
+  .         .         .         "Source/GPSynthVoice.h"
 )
 
 jucer_project_module(
@@ -196,18 +207,39 @@ jucer_project_module(
 
 jucer_export_target(
   "Visual Studio 2017"
+  EXTERNAL_LIBRARIES_TO_LINK
+  GPOsc_Lib
 )
 
 jucer_export_target_configuration(
   "Visual Studio 2017"
   NAME "Debug"
   DEBUG_MODE ON
+  HEADER_SEARCH_PATHS
+	"libs/GPOsc/include"
+  ENABLE_PLUGIN_COPY_STEP ON
+  ${EXPORTER_CONFIG_STRING_VST_DEPLOY}
 )
 
 jucer_export_target_configuration(
   "Visual Studio 2017"
   NAME "Release"
   DEBUG_MODE OFF
+  HEADER_SEARCH_PATHS
+	"libs/GPOsc/include"
+  ENABLE_PLUGIN_COPY_STEP ON
+  ${EXPORTER_CONFIG_STRING_VST_DEPLOY}
+)
+
+
+jucer_export_target_configuration(
+  "Visual Studio 2017"
+  NAME "RelWithDebInfo"
+  DEBUG_MODE OFF
+  HEADER_SEARCH_PATHS
+	"libs/GPOsc/include"
+  ENABLE_PLUGIN_COPY_STEP ON
+  ${EXPORTER_CONFIG_STRING_VST_DEPLOY}
 )
 
 
@@ -225,6 +257,8 @@ jucer_export_target_configuration(
   DEBUG_MODE ON
   HEADER_SEARCH_PATHS
 	"libs/GPOsc/include"
+  ENABLE_PLUGIN_COPY_STEP ON
+  ${EXPORTER_CONFIG_STRING_VST_DEPLOY}
 )
 
 jucer_export_target_configuration(
@@ -233,7 +267,10 @@ jucer_export_target_configuration(
   DEBUG_MODE OFF
   HEADER_SEARCH_PATHS
 	"libs/GPOsc/include"
+  ENABLE_PLUGIN_COPY_STEP ON
+  ${EXPORTER_CONFIG_STRING_VST_DEPLOY}
 )
+
 
 jucer_project_end()
 

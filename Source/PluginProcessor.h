@@ -10,7 +10,10 @@
 
 #pragma once
 
-#include "../JuceLibraryCode/JuceHeader.h"
+#include "JuceHeader.h"
+
+#include "GPContinuousOsc.h"
+#include "GPSynthVoice.h"
 
 //==============================================================================
 /**
@@ -56,6 +59,15 @@ public:
     void setStateInformation (const void* data, int sizeInBytes) override;
 
 private:
+
+	GP::ContinuousOsc oscL{ 256 };
+	GP::ContinuousOsc oscR{ 256 };
+
+	Synthesiser synth;
+
+	std::vector<GPSynthVoice*> voices;
+
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (GpsynthAudioProcessor)
 };
+

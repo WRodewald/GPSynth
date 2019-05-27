@@ -27,9 +27,24 @@ GpsynthAudioProcessor::GpsynthAudioProcessor()
 #endif
 {
 
+	float freq = 200;
+	float updtFreq = 500;
 
-	GP::VarianceKernel kernel(0.4);
-	std::cout << kernel.valueAt(0, 0);
+	oscL.setFrequency(freq/44100.f);
+	oscL.setProgressionFrequency(updtFreq / 44100.f);
+
+	oscR.setFrequency(freq / 44100.f);
+	oscR.setProgressionFrequency(updtFreq / 44100.f);
+
+	synth.addSound(new GPSynthSound());
+
+
+	for (int i = 0; i < 3; i++)
+	{
+		voices.push_back(new GPSynthVoice);
+		synth.addVoice(voices.back());
+	}
+
 }
 
 GpsynthAudioProcessor::~GpsynthAudioProcessor()
@@ -103,6 +118,14 @@ void GpsynthAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBloc
 {
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
+
+
+	for (auto & voice : voices)
+	{
+		voice->prepare(sampleRate, samplesPerBlock);
+	}
+	synth.setCurrentPlaybackSampleRate(sampleRate);
+
 }
 
 void GpsynthAudioProcessor::releaseResources()
@@ -156,12 +179,13 @@ void GpsynthAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer
     // the samples and the outer loop is handling the channels.
     // Alternatively, you can process the samples with the channels
     // interleaved by keeping the same state.
-    for (int channel = 0; channel < totalNumInputChannels; ++channel)
-    {
-        auto* channelData = buffer.getWritePointer (channel);
 
-        // ..do something to the data...
-    }
+	// TODO dirty
+	auto ch0 = buffer.getWritePointer(0);
+	auto ch1 = buffer.getWritePointer(1);
+
+	synth.renderNextBlock(buffer, midiMessages, 0, buffer.getNumSamples());
+
 }
 
 //==============================================================================
